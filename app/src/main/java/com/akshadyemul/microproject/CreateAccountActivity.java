@@ -8,36 +8,68 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CreateAccountActivity extends AppCompatActivity {
+
+    TextView btnLogin;
+    EditText etUsername,etPassword,etRePassword;
+    Button btnCreateAccount;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        TextView loginbt = findViewById(R.id.loginbt);
-        EditText nameET = findViewById(R.id.name);
-        EditText emailET = findViewById(R.id.email);
-        Button createAccountbt = findViewById(R.id.createaccountbt);
-
-        String email = emailET.getText().toString();
-        String name = nameET.getText().toString();
-
         Intent login = new Intent(getApplicationContext(), LoginActivity.class);
-        Intent createAccount = new Intent(getApplicationContext(), MainActivity.class);
 
-        createAccount.putExtra("name",name);
-        createAccount.putExtra("name",email);
+        btnLogin = findViewById(R.id.btnLogin);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
+        etRePassword = findViewById(R.id.etRePassword);
+        btnCreateAccount = findViewById(R.id.btnCreateAccount);
 
-        createAccountbt.setOnClickListener(new View.OnClickListener() {
+        dbHelper = new DBHelper(this);
+
+        btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(createAccount);
+                // Retrieve the EditText values when the button is clicked
+//                String email = etUsername.getText().toString();
+//                String name = etPassword.getText().toString();
+//
+//                Intent createAccount = new Intent(getApplicationContext(), MainActivity.class);
+//                createAccount.putExtra("name", name);
+//                createAccount.putExtra("email", email);
+//                startActivity(createAccount);
+
+                String user, password, repassword;
+                user = etUsername.getText().toString();
+                password = etPassword.getText().toString();
+                repassword = etRePassword.getText().toString();
+
+                if (user.equals("") || password.equals("") || repassword.equals("")) {
+                    Toast.makeText(CreateAccountActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (password.equals(repassword)) {
+                        if (dbHelper.checkUsername(user)) {
+                            Toast.makeText(CreateAccountActivity.this, "User Already Exist", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        boolean registerSuccess = dbHelper.insertData(user, password);
+                        if (registerSuccess)
+                            Toast.makeText(CreateAccountActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(CreateAccountActivity.this, "User Registered Failed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CreateAccountActivity.this, "Password do not match", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
-        loginbt.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(login);

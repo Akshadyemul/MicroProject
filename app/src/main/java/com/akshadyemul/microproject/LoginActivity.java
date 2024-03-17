@@ -2,41 +2,52 @@ package com.akshadyemul.microproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
+
+    Button btnLogin;
+    TextView tvCreateAccount;
+    EditText etUsername, etPassword;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button loginbt = findViewById(R.id.loginbt);
-        TextView createAccountbt = findViewById(R.id.createaccountbt);
-        EditText emailET = findViewById(R.id.email);
-        EditText passwordET = findViewById(R.id.password);
+        btnLogin = findViewById(R.id.btnLogin);
+        tvCreateAccount = findViewById(R.id.tvCreateAccount);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
 
+        dbHelper = new DBHelper(this);
 
-        Intent home = new Intent(getApplicationContext(), MainActivity.class);
-
-        Intent createAccount = new Intent(getApplicationContext(), CreateAccountActivity.class);
-
-        loginbt.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailET.getText().toString();
-                startActivity(home);
+                boolean isLoggedId = dbHelper.checkUser(etUsername.getText().toString(), etPassword.getText().toString());
+                if (isLoggedId) {
+                    String user = etUsername.getText().toString();
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    i.putExtra("username",user);
+                    startActivity(i);
+                } else
+                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        createAccountbt.setOnClickListener(new View.OnClickListener() {
+        tvCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent createAccount = new Intent(getApplicationContext(), CreateAccountActivity.class);
                 startActivity(createAccount);
             }
         });

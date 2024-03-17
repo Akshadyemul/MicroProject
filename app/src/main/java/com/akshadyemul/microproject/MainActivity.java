@@ -14,13 +14,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent fromLogin = getIntent();
-        String lname = fromLogin.getStringExtra("name");
-        String lemail = fromLogin.getStringExtra("email");
+        String lname = fromLogin.getStringExtra("username");
 
         TextView name = findViewById(R.id.name);
-        TextView email = findViewById(R.id.email);
 
-        name.setText(lname);
-        email.setText(lemail);
+        name.setText("Welcome Back \n"+lname);
     }
 }

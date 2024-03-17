@@ -35,14 +35,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Retrieve the EditText values when the button is clicked
-//                String email = etUsername.getText().toString();
-//                String name = etPassword.getText().toString();
-//
-//                Intent createAccount = new Intent(getApplicationContext(), MainActivity.class);
-//                createAccount.putExtra("name", name);
-//                createAccount.putExtra("email", email);
-//                startActivity(createAccount);
 
                 String user, password, repassword;
                 user = etUsername.getText().toString();
